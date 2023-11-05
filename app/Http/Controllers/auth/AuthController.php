@@ -26,7 +26,7 @@ class AuthController extends Controller
         }
 
         //if confirmation code is not the same then return error
-        if ($request->confirmation_code != Vcard::where('phone_number', $request->username)->first()->confirmation_code) {
+        if (!Hash::check($request->confirmation_code , Vcard::where('phone_number', $request->username)->first()->confirmation_code)) {
             return response()->json(
                 ['msg' => 'Confirmation code is invalid'],
                 401
