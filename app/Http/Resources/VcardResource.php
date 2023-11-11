@@ -21,6 +21,7 @@ class VcardResource extends JsonResource
             'balance' => $this->balance,
             'max_debit' => $this->max_debit,
             // 'categories' => $this->categories,
+            'piggy_bank_balance' => $this->piggy_bank_balance
         ];
     }
 }
