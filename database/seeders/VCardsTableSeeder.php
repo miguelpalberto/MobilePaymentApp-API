@@ -443,6 +443,25 @@ class VCardsTableSeeder extends Seeder
         $this->command->info("All balances were updated");
     }
 
+    
+    private function updatePiggyBankBalance()
+    {
+        $totalCards = count(VCardsTableSeeder::$vCardsCreated);
+        $i = 0;
+        foreach (VCardsTableSeeder::$vCardsCreated as $vcard) {
+            $i++;
+            $min = 0;
+            $max = 12000;
+            $digit = 2;
+            $random_balance = mt_rand($min * 10, $max * 10) / pow(10, $digit);
+            DB::update('update vcards set piggy_bank_balance = ? where phone_number = ?', [$random_balance, $vcard['phoneNumber']]);
+            if ($i % 10 == 0) {
+                $this->command->info("Update piggy bank balance of vCard $i / $totalCards");
+            }
+        }
+        $this->command->info("All piggy bank balances were updated");
+    }
+
     public function run()
     {
         self::calculateSumWeight();
@@ -541,6 +560,9 @@ class VCardsTableSeeder extends Seeder
 
         $this->command->info("Update information about vCard balance");
         $this->updateBalaces();
+
+        $this->command->info("Update information about vCard piggy bank balance");
+        $this->updatePiggyBankBalance();
     }
 }
 
