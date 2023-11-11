@@ -46,6 +46,9 @@ return new class extends Migration
             $table->decimal('balance', 9, 2)->default(0);
             $table->decimal('max_debit', 9, 2)->default(5000);
 
+            // vCard Piggy Bank balance field
+            $table->decimal('piggy_bank_balance', 9, 2)->default(0);
+
             // custom options
             $table->json('custom_options')->nullable();
             // custom data
