@@ -11,4 +11,9 @@ class TransactionController extends Controller
     {
         return TransactionResource::collection($vcard->transactions()->orderBy('date', 'desc')->get());
     }
+
+    public function getLatestVCardTransaction(Vcard $vcard)
+    {
+        return new TransactionResource($vcard->transactions()->orderBy('date', 'desc')->first());
+    }
 }

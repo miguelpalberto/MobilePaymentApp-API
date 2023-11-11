@@ -32,6 +32,7 @@ Route::middleware('auth:api')->post(
 
 Route::middleware('auth:api')->group(
     function () {
+        Route::get('vcards/{vcard}/transactions/latest', [TransactionController::class, 'getLatestVCardTransaction']);
         Route::get('vcards/{vcard}/transactions', [TransactionController::class, 'getVCardTransactions']);
         Route::apiResource('/vcard', 'App\Http\Controllers\VcardController');
     }
