@@ -120,7 +120,10 @@ class VCardsTableSeeder extends Seeder
             if ($fixedPhone > 0) {
                 $phoneNumber += $fixedPhone;
             } else {
-                $phoneNumber = '9' . $faker->randomNumber($nbDigits = 8, $strict = true);
+                // Evita os números default 999999999 e 999999998
+                do {
+                    $phoneNumber = '9' . $faker->randomNumber($nbDigits = 8, $strict = true);
+                } while ($phoneNumber == DefaultVCardsSeeder::$defaultEmptyPhoneNumber || $phoneNumber == DefaultVCardsSeeder::$defaultPhoneNumberWithFinancialData);
             }
         } while (array_key_exists($phoneNumber, VCardsTableSeeder::$vCardsCreated));
         $createdAt = $created_date ?? $faker->dateTimeBetween('-2 years', '-3 months');

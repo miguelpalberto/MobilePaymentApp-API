@@ -36,6 +36,7 @@ class DatabaseSeeder extends Seeder
 
         $this->call(CategoriesTableSeeder::class);
         $this->call(UsersTableSeeder::class);
+        $this->call(DefaultVCardsSeeder::class);
         $this->call(VCardsTableSeeder::class);
         $this->call(VCardsPhotoSeeder::class);
 
