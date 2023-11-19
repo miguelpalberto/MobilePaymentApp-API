@@ -64,7 +64,15 @@ class VcardController extends Controller
      */
     public function update(Request $request, Vcard $vcard)
     {
-        //
+        //$vcard->fill($request->validated());
+        $data = $request->validate([
+        'name' => 'required|string|max:255',
+        'email' => 'required|email|max:255',
+    ]);
+
+        $vcard->update($data);
+
+        return new VcardResource($vcard);
     }
 
     /**
