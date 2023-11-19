@@ -37,3 +37,5 @@ Route::middleware('auth:api')->group(
         Route::apiResource('/vcard', 'App\Http\Controllers\VcardController');
     }
 );
+
+//Route::apiResource("vcards", VCardController::class);
