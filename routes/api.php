@@ -5,6 +5,7 @@ use App\Http\Controllers\auth\AuthController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TransactionController;
+use App\Http\Controllers\VcardController;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,6 +35,7 @@ Route::middleware('auth:api')->group(
     function () {
         Route::get('vcards/{vcard}/transactions/latest', [TransactionController::class, 'getLatestVCardTransaction']);
         Route::get('vcards/{vcard}/transactions', [TransactionController::class, 'getVCardTransactions']);
+        Route::patch('vcards/{vcard}/updatePiggyBankBalance', [VcardController::class, 'updatePiggyBankBalance']);
         Route::apiResource('/vcard', 'App\Http\Controllers\VcardController');
     }
 );

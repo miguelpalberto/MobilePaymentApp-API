@@ -8,7 +8,7 @@ use App\Http\Resources\VcardResource;
 
 use Illuminate\Support\Facades\Log;
 use App\Http\Requests\StoreVcardRequest;
-
+use App\Http\Requests\UpdatePiggyBankBalanceRequest;
 
 class VcardController extends Controller
 {
@@ -17,28 +17,12 @@ class VcardController extends Controller
      */
     public function index()
     {
-        //
         return VcardResource::collection(Vcard::all());
-        // return Vcard::all();
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
 
     public function store(StoreVcardRequest $request)
     {
-        //
-        // $vcard = new Vcard();
-        // $vcard->phone_number = $request->phone_number;
-        // $vcard->name = $request->name;
-        // $vcard->photo_url = $request->photo_url;
-        // $vcard->balance = $request->balance;
-        // $vcard->max_debit = $request->max_debit;
-        error_log($request);
-// ($request);
-
-        //validar com FormRequest
         $vcard = new Vcard();
         $vcard->fill($request->validated());
         $vcard->password = bcrypt($request->password);
@@ -50,18 +34,11 @@ class VcardController extends Controller
 
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(Vcard $vcard)
     {
-        //show a single vcard
         return new VcardResource($vcard);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, Vcard $vcard)
     {
         //$vcard->fill($request->validated());
@@ -75,11 +52,26 @@ class VcardController extends Controller
         return new VcardResource($vcard);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Vcard $vcard)
     {
-        //
+    }
+
+    public function updatePiggyBankBalance(UpdatePiggyBankBalanceRequest $request, Vcard $vcard){
+
+        $request->validated();
+
+        if ($request->piggy_bank_balance > $vcard->balance) {
+            //return laravel error
+            return response()->json(
+                [
+                    'errors' => [
+                        'piggy_bank_balance' => ['Piggy bank balance cannot be greater than balance']
+                    ]
+                ], 422);
+        }
+
+        $vcard->piggy_bank_balance = $request->piggy_bank_balance;
+        $vcard->save();
+        return new VcardResource($vcard);
     }
 }
