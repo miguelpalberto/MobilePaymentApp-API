@@ -21,6 +21,7 @@ class VcardResource extends JsonResource
             'photo_url' => $this->photo_url,
             'balance' => $this->balance,
             'max_debit' => $this->max_debit,
+            'email' => $this->email,
             // 'categories' => $this->categories,
             'piggy_bank_balance' => $this->piggy_bank_balance
         ];

@@ -64,3 +64,8 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+## vCard Project
+
+In order to display images stored in the non public folder /storage/app/public/fotos a sybolic link has to be created in the /public folder. To do so, run the following command:
+- php artisan storage:link
