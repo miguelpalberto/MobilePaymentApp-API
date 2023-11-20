@@ -14,19 +14,16 @@ class TransactionController extends Controller
 
     public function getLatestVCardTransaction(Vcard $vcard)
     {
-        $transaction = $vcard->transactions()->orderBy('date', 'desc')->first();
+        $count = $vcard->transactions()->count();
+        $transaction = null;
 
-        if ($transaction == null) {
-            //return laravel error
-            return response()->json(
-                [
-                    'message' => 'No transactions found',
-                    'errors' => [
-                        'No transactions found'
-                    ]
-                ], 422);
+        if ($count > 0) {
+            $transaction = new TransactionResource($vcard->transactions()->orderBy('date', 'desc')->first());
         }
-
-        return new TransactionResource($transaction);
+        
+        return response()->json([
+            'latestTransaction' => $transaction,
+            'total' => $count
+        ], 200);
     }
 }
