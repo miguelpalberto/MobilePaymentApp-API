@@ -65,7 +65,7 @@ class VcardController extends Controller
             return response()->json(
                 [
                     'errors' => [
-                        'piggy_bank_balance' => ['Piggy bank balance cannot be greater than balance']
+                        'piggy_bank_balance' => ['Piggy bank balance cannot be greater than the Total Balance']
                     ]
                 ], 422);
         }
