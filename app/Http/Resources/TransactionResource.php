@@ -14,7 +14,7 @@ class TransactionResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $signedValue = $this->type == 'C' ? $this->value : "-".$this->value;
+        $signedValue = $this->type == 'C' ? "+".$this->value : "-".$this->value;
         $computedValue = $signedValue . "€";
         return [
             'id' => $this->id,
