@@ -15,7 +15,7 @@ class UpdatePiggyBankBalanceRequest extends FormRequest
     {
         return
             [
-                'piggy_bank_balance' => 'required|decimal:2|min:0',
+                'piggy_bank_balance' => 'required|decimal:0,2|min:0',
             ];
     }
 
@@ -23,8 +23,8 @@ class UpdatePiggyBankBalanceRequest extends FormRequest
     {
         return [
             'piggy_bank_balance.required' => 'The piggy bank balance is required',
-            'piggy_bank_balance.decimal' => 'The piggy bank balance must be a decimal number with 2 decimal places',
-            'piggy_bank_balance.min' => 'The piggy bank balance must be greater than or equal to 0',
+            'piggy_bank_balance.decimal' => 'The piggy bank balance must not have more than 2 decimal places',
+            'piggy_bank_balance.min' => 'The amount being withdrawn is greater than the current Piggy Bank Vault balance',
         ];
     }
 }

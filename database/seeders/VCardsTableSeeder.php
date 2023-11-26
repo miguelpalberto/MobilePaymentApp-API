@@ -453,10 +453,13 @@ class VCardsTableSeeder extends Seeder
         $i = 0;
         foreach (VCardsTableSeeder::$vCardsCreated as $vcard) {
             $i++;
-            $min = 0;
-            $max = 12000;
-            $digit = 2;
-            $random_balance = mt_rand($min * 10, $max * 10) / pow(10, $digit);
+            $random_balance = 0;
+            if ($vcard['balance'] > 0){
+                $min = 0;
+                $digit = 2;
+                $max = $vcard['balance'];
+                $random_balance = mt_rand($min * 10, $max * 10) / pow(10, $digit);
+            }
             DB::update('update vcards set piggy_bank_balance = ? where phone_number = ?', [$random_balance, $vcard['phoneNumber']]);
             if ($i % 10 == 0) {
                 $this->command->info("Update piggy bank balance of vCard $i / $totalCards");
