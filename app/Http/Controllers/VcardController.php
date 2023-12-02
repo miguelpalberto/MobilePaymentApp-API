@@ -9,6 +9,7 @@ use App\Http\Resources\VcardResource;
 use Illuminate\Support\Facades\Log;
 use App\Http\Requests\StoreVcardRequest;
 use App\Http\Requests\UpdatePiggyBankBalanceRequest;
+use App\Http\Resources\VcardContactsResource;
 
 class VcardController extends Controller
 {
@@ -31,7 +32,6 @@ class VcardController extends Controller
         $vcard->save();
 
         return new VcardResource($vcard);
-
     }
 
     public function show(Vcard $vcard)
@@ -43,9 +43,9 @@ class VcardController extends Controller
     {
         //$vcard->fill($request->validated());
         $data = $request->validate([
-        'name' => 'required|string|max:255',
-        'email' => 'required|email|max:255',
-    ]);
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+        ]);
 
         $vcard->update($data);
 
@@ -56,7 +56,8 @@ class VcardController extends Controller
     {
     }
 
-    public function updatePiggyBankBalance(UpdatePiggyBankBalanceRequest $request, Vcard $vcard){
+    public function updatePiggyBankBalance(UpdatePiggyBankBalanceRequest $request, Vcard $vcard)
+    {
 
         $request->validated();
 
@@ -67,11 +68,31 @@ class VcardController extends Controller
                     'errors' => [
                         'piggy_bank_balance' => ['Cannot store more money than the Total Balance in the Piggy Bank Vault']
                     ]
-                ], 422);
+                ],
+                422
+            );
         }
 
         $vcard->piggy_bank_balance = $request->piggy_bank_balance;
         $vcard->save();
         return new VcardResource($vcard);
+    }
+
+
+    public function getVCardContacts(Request $request)
+    {
+        $contacts = $request->input('contacts');
+        $existingVCardContacts = [];
+
+        foreach ($contacts as $contact) {
+            $existingContact = Vcard::where('phone_number', $contact)->first();
+            if ($existingContact) {
+                $existingVCardContacts[] = $existingContact['phone_number'];
+            }
+        }
+
+        return response()->json([
+            'contacts' => $existingVCardContacts
+        ], 200);
     }
 }

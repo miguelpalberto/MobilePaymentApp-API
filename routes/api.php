@@ -37,8 +37,10 @@ Route::middleware('auth:api')->group(
         Route::get('vcards/{vcard}/transactions', [TransactionController::class, 'getVCardTransactions']);
         Route::patch('vcards/{vcard}/updatePiggyBankBalance', [VcardController::class, 'updatePiggyBankBalance']);
         Route::apiResource('/vcard', 'App\Http\Controllers\VcardController');
-        
+
         Route::post('transactions', [TransactionController::class, 'store']);
+
+        Route::post('vcards/contacts', [VcardController::class, 'getVCardContacts']);
     }
 );
 
