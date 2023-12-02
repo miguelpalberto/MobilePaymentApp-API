@@ -40,7 +40,7 @@ Route::middleware('auth:api')->group(
 
         Route::post('transactions', [TransactionController::class, 'store']);
 
-        Route::post('vcards/contacts', [VcardController::class, 'getVCardContacts']);
+        Route::get('vcards/contacts', [VcardController::class, 'getVCardContacts']);
     }
 );
 

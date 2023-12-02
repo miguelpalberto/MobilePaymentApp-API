@@ -82,6 +82,11 @@ class VcardController extends Controller
     public function getVCardContacts(Request $request)
     {
         $contacts = $request->input('contacts');
+        if ($contacts == null) {
+            return response()->json([
+                'contacts' => []
+            ], 200);
+        }
         $existingVCardContacts = [];
 
         foreach ($contacts as $contact) {
