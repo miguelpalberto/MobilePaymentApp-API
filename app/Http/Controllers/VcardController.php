@@ -82,6 +82,7 @@ class VcardController extends Controller
 
     public function getVCardContacts(Request $request)
     {
+        $vcard = $request->user();
         $contacts = $request->input('contacts');
         if ($contacts == null) {
             return response()->json([
@@ -92,7 +93,7 @@ class VcardController extends Controller
 
         foreach ($contacts as $contact) {
             $existingContact = Vcard::where('phone_number', $contact)->first();
-            if ($existingContact) {
+            if ($existingContact && $existingContact->deleted_at == null && $existingContact->phone_number != $vcard->id) {
                 $existingVCardContacts[] = $existingContact['phone_number'];
             }
         }
