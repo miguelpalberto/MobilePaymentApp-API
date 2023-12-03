@@ -85,7 +85,7 @@ class TransactionController extends Controller
             $pairTransaction->payment_type = 'VCARD';
             $pairTransaction->payment_reference = $vcard->phone_number;
             $pairTransaction->old_balance = $pairVCard->balance;
-            $pairTransaction->new_balance = $pairVCard->balance - $validRequest['value'];
+            $pairTransaction->new_balance = $pairVCard->balance + $validRequest['value'];
             $pairTransaction->save();
 
             $pairVCard->balance = $pairTransaction->new_balance;
