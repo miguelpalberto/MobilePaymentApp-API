@@ -39,6 +39,11 @@ class VcardController extends Controller
         return new VcardResource($vcard);
     }
 
+    public function exists($vcard)
+    {
+        return response()->json(Vcard::where('phone_number', $vcard)->exists(), 200);
+    }
+
     public function update(Request $request, Vcard $vcard)
     {
         //$vcard->fill($request->validated());
@@ -50,10 +55,6 @@ class VcardController extends Controller
         $vcard->update($data);
 
         return new VcardResource($vcard);
-    }
-
-    public function destroy(Vcard $vcard)
-    {
     }
 
     public function updatePiggyBankBalance(UpdatePiggyBankBalanceRequest $request, Vcard $vcard)
