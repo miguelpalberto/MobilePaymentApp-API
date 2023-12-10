@@ -94,6 +94,24 @@ class TransactionController extends Controller
             $vcard->balance = $transaction->new_balance;
             $vcard->save();
 
+            if ($validRequest['autoSave']) {
+                //Auto Saving Piggy Bank:
+                $totalBalance = $transaction->new_balance;
+                $valorTransacao = $validRequest['value'];
+
+                $centimos = $valorTransacao - floor($valorTransacao);
+                // Calculate the amount left until the next integer
+                $decimasSupostas = 1 - $centimos;
+                // Arredondar se necessario (limitacoes hardware):
+                $decimasSupostas = round($decimasSupostas * 100) / 100;
+
+                if ($totalBalance >= $decimasSupostas) {
+                    //$vcard->balance = $vcard->balance - $decimasSupostas; //Nao  porque balance é o available balance + piggy bank balance
+                    $vcard->piggy_bank_balance = $vcard->piggy_bank_balance + $decimasSupostas;
+                    $vcard->save();
+                }
+            }
+
             return $transaction;
         });
 

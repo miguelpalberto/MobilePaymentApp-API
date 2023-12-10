@@ -18,7 +18,8 @@ class TransactionRequest extends FormRequest
             'vcard' => 'required|string|exists:vcards,phone_number,deleted_at,NULL',
             'confirmation_code' => 'required|string',
             'value' => 'required|decimal:0,2|min:0.01',
-            'pair_vcard' => 'required|regex:/^9\d{8}$/|string|different:vcard|exists:vcards,phone_number,deleted_at,NULL'
+            'pair_vcard' => 'required|regex:/^9\d{8}$/|string|different:vcard|exists:vcards,phone_number,deleted_at,NULL',
+            'autoSave' => 'boolean'
         ];
     }
 
