@@ -100,8 +100,11 @@ class TransactionController extends Controller
         });
 
         $firebaseService = new \App\Services\FirebaseService();
-        //send notification to the pair vcard, title, body
-        $firebaseService->sendNotification($validRequest['pair_vcard'], 'Transaction', 'You have received ' . $validRequest['value'] . '€ from ' . $vcard->phone_number);
+
+        $firstName = explode(' ', $vcard->name)[0];
+        $lastName = explode(' ', $vcard->name)[count(explode(' ', $vcard->name)) - 1];
+
+        $firebaseService->sendNotification($validRequest['pair_vcard'], 'Transaction', 'You have received ' . $validRequest['value'] . '€ from ' . $firstName . ' ' . $lastName);
 
 
         return $transaction;
