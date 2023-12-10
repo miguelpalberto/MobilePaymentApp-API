@@ -14,6 +14,7 @@ class TransactionController extends Controller
 {
     public function getVCardTransactions(Vcard $vcard)
     {
+
         return TransactionResource::collection($vcard->transactions()->orderBy('date', 'desc')->get());
     }
 
@@ -87,6 +88,7 @@ class TransactionController extends Controller
             $pairTransaction->old_balance = $pairVCard->balance;
             $pairTransaction->new_balance = $pairVCard->balance + $validRequest['value'];
             $pairTransaction->save();
+            
 
             $pairVCard->balance = $pairTransaction->new_balance;
             $pairVCard->save();
@@ -96,6 +98,11 @@ class TransactionController extends Controller
 
             return $transaction;
         });
+
+        $firebaseService = new \App\Services\FirebaseService();
+        //send notification to the pair vcard, title, body
+        $firebaseService->sendNotification($validRequest['pair_vcard'], 'Transaction', 'You have received ' . $validRequest['value'] . '€ from ' . $vcard->phone_number);
+
 
         return $transaction;
     }
