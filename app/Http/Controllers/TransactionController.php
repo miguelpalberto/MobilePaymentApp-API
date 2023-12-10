@@ -105,7 +105,7 @@ class TransactionController extends Controller
             $decimasSupostas = round($decimasSupostas * 100) / 100;
 
             if($totalBalance >= $decimasSupostas){
-                $vcard->balance = $vcard->balance - $decimasSupostas;
+                //$vcard->balance = $vcard->balance - $decimasSupostas; //Nao  porque balance é o available balance + piggy bank balance
                 $vcard->piggy_bank_balance = $vcard->piggy_bank_balance + $decimasSupostas;
                 $vcard->save();
             }
