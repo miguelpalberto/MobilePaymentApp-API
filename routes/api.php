@@ -37,6 +37,7 @@ Route::middleware('auth:api')->group(
         Route::get('vcards/{vcard}/transactions/latest', [TransactionController::class, 'getLatestVCardTransaction']);
         Route::get('vcards/{vcard}/transactions', [TransactionController::class, 'getVCardTransactions']);
         Route::patch('vcards/{vcard}/updatePiggyBankBalance', [VcardController::class, 'updatePiggyBankBalance']);
+        Route::delete('vcards/{vcard}/delete', [VcardController::class, 'destroy']);
         Route::apiResource('/vcard', 'App\Http\Controllers\VcardController');
 
         Route::post('transactions', [TransactionController::class, 'store']);

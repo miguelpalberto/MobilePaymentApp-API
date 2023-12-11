@@ -2,14 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Vcard;
-use App\Http\Resources\VcardResource;
-
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+
+use Illuminate\Support\Facades\Hash;
+use App\Http\Resources\VcardResource;
 use App\Http\Requests\StoreVcardRequest;
-use App\Http\Requests\UpdatePiggyBankBalanceRequest;
+use App\Http\Requests\DeleteVCardRequest;
 use App\Http\Resources\VcardContactsResource;
+use App\Http\Requests\UpdatePiggyBankBalanceRequest;
 
 class VcardController extends Controller
 {
@@ -101,5 +103,58 @@ class VcardController extends Controller
         return response()->json([
             'contacts' => $existingVCardContacts
         ], 200);
+    }
+
+    public function destroy(VCard $vcard, DeleteVCardRequest $request)
+    {
+        $user = $request->user();
+
+        $validRequest = $request->validated();
+        //if user is not admin, check if password and confirmation code are correct
+        //else if user is admin, just delete the vcard
+        if ($user->user_type != 'A') {
+            if (!Hash::check($validRequest['password'], $vcard->password)) {
+                return response()->json([
+                    'errors' => [
+                        'password' => [
+                            'The password is incorrect'
+                        ]
+                    ]
+                ], 422);
+            }
+
+            if (!Hash::check($validRequest['confirmation_code'], $vcard->confirmation_code)) {
+                return response()->json([
+                    'errors' => [
+                        'confirmation_code' => [
+                            'The confirmation code is incorrect'
+                        ]
+                    ]
+                ], 422);
+            }
+        }
+
+        if ($vcard->balance > 0) {
+            return response()->json([
+                'errors' => [
+                    'balance' => [
+                        'Cannot delete vCard with positive balance'
+                    ]
+                ]
+            ], 422);
+        }
+
+        $hasTransactions = $vcard->transactions()->exists();
+
+        if ($hasTransactions) {
+            $vcard->transactions()->delete();
+            $vcard->categories()->delete();
+            $vcard->delete();  // Soft delete
+        } else {
+            $vcard->categories()->forceDelete();
+            $vcard->forceDelete();  // Hard delete
+        }
+
+        return response()->noContent();
     }
 }

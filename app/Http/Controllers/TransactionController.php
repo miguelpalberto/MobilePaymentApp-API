@@ -23,7 +23,7 @@ class TransactionController extends Controller
         $transaction = null;
 
         if ($count > 0) {
-            $transaction = new TransactionResource($vcard->transactions()->orderBy('date', 'desc')->first());
+            $transaction = new TransactionResource(Transaction::where('vcard', $vcard->phone_number)->orderBy('date', 'desc')->first());
         }
 
         return response()->json([
