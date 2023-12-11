@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class TransactionResource extends JsonResource
+class NotificationResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -14,14 +14,12 @@ class TransactionResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $signedValue = $this->type == 'C' ? "+" . $this->value : "-" . $this->value;
-        $computedValue = $signedValue . "€";
+        $computedValue = $this->value . "€";
         return [
             'id' => $this->id,
-            'type' => $this->type == 'C' ? 'Credit' : 'Debit',
             'value' => $computedValue,
             'datetime' => $this->datetime,
-            'payment_type' => $this->payment_type,
+            'notification_read' => $this->notification_read,
             'payment_reference' => $this->payment_reference,
         ];
     }

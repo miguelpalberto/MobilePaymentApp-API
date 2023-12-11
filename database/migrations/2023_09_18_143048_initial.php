@@ -108,12 +108,12 @@ return new class extends Migration
             // The payment has a type and a reference
             // If transaction is between 2 vCards the reference will be the phone_number of the cVard
             // Supported ttypes of payments (The type of payment affects the validation)
-                // vCard -  Phone number with 9 digits - must exist on the database
-                // MBWAY -  Phone number with 9 digits
-                // PayPal - eMail
-                // IBAN - bank transfer (2 letters + 23 digits)
-                // MB - Multibanco payment - entity number (5 digits) + Reference (9 digits))
-                // VISA - Visa card number (16 digits)
+            // vCard -  Phone number with 9 digits - must exist on the database
+            // MBWAY -  Phone number with 9 digits
+            // PayPal - eMail
+            // IBAN - bank transfer (2 letters + 23 digits)
+            // MB - Multibanco payment - entity number (5 digits) + Reference (9 digits))
+            // VISA - Visa card number (16 digits)
             $table->enum('payment_type', ['VCARD', 'MBWAY', 'PAYPAL', 'IBAN', 'MB', 'VISA']);
             $table->string('payment_reference');
 
@@ -125,6 +125,9 @@ return new class extends Migration
             $table->foreign('pair_transaction')->references('id')->on('transactions');
             $table->string('pair_vcard', 9)->nullable();
             $table->foreign('pair_vcard')->references('phone_number')->on('vcards');
+
+            // trasaction notification active or incative
+            $table->boolean('notification_read')->default(false);
 
             // Transaction description and classification (optional)
             $table->unsignedBigInteger('category_id')->nullable();
