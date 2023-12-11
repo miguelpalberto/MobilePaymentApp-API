@@ -14,7 +14,7 @@ class VCardsTableSeeder extends Seeder
         ['code' => 'VCARD', 'debit_weight' => 100, 'credit_weight' => 500],
         ['code' => 'PAYPAL', 'debit_weight' => 50, 'credit_weight' => 50],
         ['code' => 'MBWAY', 'debit_weight' => 50, 'credit_weight' => 100],
-        ['code' => 'IBAN','debit_weight' => 100, 'credit_weight' => 400],
+        ['code' => 'IBAN', 'debit_weight' => 100, 'credit_weight' => 400],
         ['code' => 'MB',  'debit_weight' => 600, 'credit_weight' => 0],
         ['code' => 'VISA', 'debit_weight' => 100, 'credit_weight' => 20],
     ];
@@ -163,8 +163,8 @@ class VCardsTableSeeder extends Seeder
             'insert into categories (type, name, vcard, deleted_at) select type, name, ?, ? from default_categories order by type desc',
             [
                 $vCard['phone_number'],
-//                $vCard['created_at'],
-//                $vCard['updated_at'],
+                //                $vCard['created_at'],
+                //                $vCard['updated_at'],
                 $vCard['deleted_at']
             ]
         );
@@ -446,7 +446,7 @@ class VCardsTableSeeder extends Seeder
         $this->command->info("All balances were updated");
     }
 
-    
+
     private function updatePiggyBankBalance()
     {
         $totalCards = count(VCardsTableSeeder::$vCardsCreated);
@@ -454,7 +454,7 @@ class VCardsTableSeeder extends Seeder
         foreach (VCardsTableSeeder::$vCardsCreated as $vcard) {
             $i++;
             $random_balance = 0;
-            if ($vcard['balance'] > 0){
+            if ($vcard['balance'] > 0) {
                 $min = 0;
                 $digit = 2;
                 $max = $vcard['balance'];
@@ -571,4 +571,3 @@ class VCardsTableSeeder extends Seeder
         $this->updatePiggyBankBalance();
     }
 }
-

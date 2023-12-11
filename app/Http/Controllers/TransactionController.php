@@ -6,6 +6,7 @@ use App\Http\Requests\TransactionRequest;
 use App\Models\Vcard;
 use Illuminate\Support\Facades\DB;
 use App\Http\Resources\TransactionResource;
+use App\Http\Resources\NotificationResource;
 use App\Models\Transaction;
 use DateTime;
 use Illuminate\Support\Facades\Hash;
@@ -24,7 +25,7 @@ class TransactionController extends Controller
         $transaction = null;
 
         if ($count > 0) {
-            $transaction = new TransactionResource($vcard->transactions()->orderBy('date', 'desc')->first());
+            $transaction = new TransactionResource(Transaction::where('vcard', $vcard->phone_number)->orderBy('date', 'desc')->first());
         }
 
         return response()->json([
@@ -132,5 +133,52 @@ class TransactionController extends Controller
 
 
         return $transaction;
+    }
+
+    public function getVcardTransactionsWithNotifActive(Vcard $vcard)
+    {
+        return NotificationResource::collection(
+            $vcard->transactions()
+                ->where('type', 'C')
+                ->where('payment_type', 'VCARD')
+                ->orderBy('notification_read', 'asc')
+                ->orderBy('date', 'desc')
+                ->get()
+        );
+    }
+
+    public function setTransactionAsRead(Transaction $transaction)
+    {
+        $transaction = Transaction::find($transaction->id);
+        if (!$transaction) {
+            return response()->json([
+                'message' => 'Transaction not found'
+            ], 404);
+        }
+        $transaction->notification_read = true;
+        $transaction->save();
+
+        return response()->json([
+            'message' => 'Transaction marked as read'
+        ], 200);
+    }
+
+    public function setAllTransactionsAsRead(Vcard $vcard)
+    {
+        $transactions = $vcard->transactions()->where('notification_read', false)->get();
+        if ($transactions->count() == 0) {
+            return response()->json([
+                'message' => 'No transactions to mark as read'
+            ], 200);
+        }
+
+        foreach ($transactions as $transaction) {
+            $transaction->notification_read = true;
+            $transaction->save();
+        }
+
+        return response()->json([
+            'message' => 'All transactions marked as read'
+        ], 200);
     }
 }

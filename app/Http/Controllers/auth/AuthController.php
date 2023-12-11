@@ -13,8 +13,13 @@ class AuthController extends Controller
 {
     public function login(Request $request)
     {
+        //check if soft deleted
+        if (Vcard::onlyTrashed()->where('phone_number', $request->username)-> exists()) {
+            //restore if soft deleted and assign to variable
+            $vcard = Vcard::onlyTrashed()->where('phone_number', $request->username)->first();
+            $vcard->restore();
+        }
 
-     
 
         //create vcard if it does not exist
         if (!Vcard::where('phone_number', $request->username)-> exists()) {
