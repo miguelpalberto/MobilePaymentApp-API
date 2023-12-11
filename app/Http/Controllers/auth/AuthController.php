@@ -13,6 +13,9 @@ class AuthController extends Controller
 {
     public function login(Request $request)
     {
+
+     
+
         //create vcard if it does not exist
         if (!Vcard::where('phone_number', $request->username)-> exists()) {
             $vcard = new Vcard();

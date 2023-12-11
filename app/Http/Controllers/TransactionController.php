@@ -15,6 +15,7 @@ class TransactionController extends Controller
 {
     public function getVCardTransactions(Vcard $vcard)
     {
+
         return TransactionResource::collection($vcard->transactions()->orderBy('date', 'desc')->get());
     }
 
@@ -88,6 +89,7 @@ class TransactionController extends Controller
             $pairTransaction->old_balance = $pairVCard->balance;
             $pairTransaction->new_balance = $pairVCard->balance + $validRequest['value'];
             $pairTransaction->save();
+            
 
             $pairVCard->balance = $pairTransaction->new_balance;
             $pairVCard->save();
@@ -95,8 +97,34 @@ class TransactionController extends Controller
             $vcard->balance = $transaction->new_balance;
             $vcard->save();
 
+            if ($validRequest['autoSave']) {
+                //Auto Saving Piggy Bank:
+                $totalBalance = $transaction->new_balance;
+                $valorTransacao = $validRequest['value'];
+
+                $centimos = $valorTransacao - floor($valorTransacao);
+                // Calculate the amount left until the next integer
+                $decimasSupostas = 1 - $centimos;
+                // Arredondar se necessario (limitacoes hardware):
+                $decimasSupostas = round($decimasSupostas * 100) / 100;
+
+                if ($totalBalance >= $decimasSupostas) {
+                    //$vcard->balance = $vcard->balance - $decimasSupostas; //Nao  porque balance é o available balance + piggy bank balance
+                    $vcard->piggy_bank_balance = $vcard->piggy_bank_balance + $decimasSupostas;
+                    $vcard->save();
+                }
+            }
+
             return $transaction;
         });
+
+        $firebaseService = new \App\Services\FirebaseService();
+
+        $firstName = explode(' ', $vcard->name)[0];
+        $lastName = explode(' ', $vcard->name)[count(explode(' ', $vcard->name)) - 1];
+
+        $firebaseService->sendNotification($validRequest['pair_vcard'], 'Transaction', 'You have received ' . $validRequest['value'] . '€ from ' . $firstName . ' ' . $lastName);
+
 
         return $transaction;
     }
