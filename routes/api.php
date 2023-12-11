@@ -38,6 +38,9 @@ Route::middleware('auth:api')->group(
         Route::get('vcards/{vcard}/transactions', [TransactionController::class, 'getVCardTransactions']);
         Route::patch('vcards/{vcard}/updatePiggyBankBalance', [VcardController::class, 'updatePiggyBankBalance']);
         Route::apiResource('/vcard', 'App\Http\Controllers\VcardController');
+        Route::get('vcards/{vcard}/notifications', [TransactionController::class, 'getVcardTransactionsWithNotifActive']);
+        Route::post('vcards/{vcard}/notifications', [TransactionController::class, 'setAllTransactionsAsRead']);
+        Route::post('vcards/notifications/{transaction}', [TransactionController::class, 'setTransactionAsRead']);
 
         Route::post('transactions', [TransactionController::class, 'store']);
 
