@@ -36,7 +36,9 @@ Route::middleware('auth:api')->group(
         Route::get('vcards/{vcard}/exists', [VcardController::class, 'exists']);
         Route::get('vcards/{vcard}/transactions/latest', [TransactionController::class, 'getLatestVCardTransaction']);
         Route::get('vcards/{vcard}/transactions', [TransactionController::class, 'getVCardTransactions']);
+        Route::get('vcards/{vcard}/notificationsToggle', [TransactionController::class, 'getNotificationsToggle']);
         Route::patch('vcards/{vcard}/updatePiggyBankBalance', [VcardController::class, 'updatePiggyBankBalance']);
+        Route::patch('vcards/{vcard}/toggleNotifications', [VcardController::class, 'toggleNotifications']);
         Route::apiResource('/vcard', 'App\Http\Controllers\VcardController');
 
         Route::post('transactions', [TransactionController::class, 'store']);

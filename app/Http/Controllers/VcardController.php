@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Vcard;
-use App\Http\Resources\VcardResource;
-
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+
+use App\Http\Resources\VcardResource;
 use App\Http\Requests\StoreVcardRequest;
-use App\Http\Requests\UpdatePiggyBankBalanceRequest;
+use Illuminate\Foundation\Http\FormRequest;
 use App\Http\Resources\VcardContactsResource;
+use App\Http\Requests\UpdatePiggyBankBalanceRequest;
 
 class VcardController extends Controller
 {
@@ -77,6 +78,29 @@ class VcardController extends Controller
         $vcard->piggy_bank_balance = $request->piggy_bank_balance;
         $vcard->save();
         return new VcardResource($vcard);
+    }
+
+
+    public function toggleNotifications(Vcard $vcard)
+    {
+
+        $vcard->notifications = !$vcard->notifications;
+
+        $vcard->save();
+
+        return response()->json([
+            'notifications' => $vcard->notifications,
+        ], 200);
+    }
+
+
+    public function getNotificationsToggle(Vcard $vcard)
+    {
+        $columnValue = $vcard->notifications;
+
+        return response()->json([
+            'notifications' => $columnValue,
+        ], 200);
     }
 
 

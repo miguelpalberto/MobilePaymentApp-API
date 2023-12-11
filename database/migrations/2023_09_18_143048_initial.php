@@ -42,6 +42,9 @@ return new class extends Migration
             // Transactions are only allowed if blocked = false and current date <= valid_date
             $table->boolean('blocked', false);
 
+            //Notifications Being on or off
+            $table->boolean('notifications')->default(true);;
+
             // vCard current financial profile:
             $table->decimal('balance', 9, 2)->default(0);
             $table->decimal('max_debit', 9, 2)->default(5000);
